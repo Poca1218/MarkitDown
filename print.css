@@ -1,0 +1,211 @@
+/* ========================================
+   Print Styles - Markdown Editor
+   ======================================== */
+
+@media print {
+    /* Hide all non-content elements */
+    .header,
+    .toolbar,
+    .footer,
+    .drop-zone,
+    .split-view,
+    .file-info-bar,
+    .search-dialog,
+    .toc-sidebar,
+    .mode-toggle,
+    .pane-header,
+    .editor-toolbar,
+    .split-resizer,
+    .toast {
+        display: none !important;
+    }
+
+    /* Reset body styles */
+    html, body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
+    }
+
+    .app-container {
+        min-height: auto !important;
+        background: white !important;
+    }
+
+    /* Show and style markdown content */
+    .markdown-content {
+        display: block !important;
+        visibility: visible !important;
+        position: static !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        color: black !important;
+    }
+
+    .markdown-content.visible {
+        display: block !important;
+    }
+
+    /* Typography for print */
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4,
+    .markdown-content h5,
+    .markdown-content h6 {
+        color: black !important;
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    .markdown-content h1 {
+        font-size: 24pt !important;
+        border-bottom: 2px solid #000 !important;
+        padding-bottom: 8pt !important;
+    }
+
+    .markdown-content h2 {
+        font-size: 18pt !important;
+        border-bottom: 1px solid #666 !important;
+        padding-bottom: 6pt !important;
+    }
+
+    .markdown-content h3 {
+        font-size: 14pt !important;
+    }
+
+    .markdown-content p,
+    .markdown-content li {
+        color: black !important;
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Links */
+    .markdown-content a {
+        color: #0366d6 !important;
+        text-decoration: underline !important;
+    }
+
+    .markdown-content a::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .markdown-content a[href^="#"]::after {
+        content: "";
+    }
+
+    /* Code blocks */
+    .markdown-content pre {
+        background: #f4f4f4 !important;
+        border: 1px solid #ddd !important;
+        padding: 12pt !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        overflow-x: visible !important;
+        white-space: pre-wrap !important;
+        word-wrap: break-word !important;
+    }
+
+    .markdown-content code {
+        color: black !important;
+        background: #f4f4f4 !important;
+    }
+
+    .markdown-content :not(pre) > code {
+        padding: 2pt 4pt !important;
+        border: 1px solid #ddd !important;
+    }
+
+    /* Tables */
+    .markdown-content table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .markdown-content th,
+    .markdown-content td {
+        border: 1px solid #333 !important;
+        padding: 8pt !important;
+        color: black !important;
+        background: white !important;
+    }
+
+    .markdown-content th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+    }
+
+    .markdown-content tr:nth-child(even) {
+        background: #fafafa !important;
+    }
+
+    /* Blockquotes */
+    .markdown-content blockquote {
+        border-left: 4px solid #666 !important;
+        margin: 12pt 0 !important;
+        padding: 8pt 16pt !important;
+        color: #333 !important;
+        background: #f9f9f9 !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Images */
+    .markdown-content img {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        border: 1px solid #ddd !important;
+    }
+
+    /* Task lists */
+    .markdown-content input[type="checkbox"] {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Horizontal rules */
+    .markdown-content hr {
+        border: none !important;
+        border-top: 1px solid #333 !important;
+        margin: 16pt 0 !important;
+    }
+
+    /* KaTeX formulas */
+    .katex {
+        color: black !important;
+    }
+
+    /* Mermaid diagrams */
+    .mermaid svg {
+        max-width: 100% !important;
+    }
+
+    /* Page settings */
+    @page {
+        margin: 2cm;
+        size: A4;
+    }
+
+    @page :first {
+        margin-top: 3cm;
+    }
+}
+
+/* Print-specific class for triggering print mode */
+.print-mode .markdown-content {
+    display: block !important;
+    visibility: visible !important;
+}
