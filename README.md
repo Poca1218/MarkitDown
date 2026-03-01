@@ -144,6 +144,13 @@ Markdown/
 本專案 **未開放任何開源授權**。
 未來如有授權、合作或商業使用需求，需另行取得作者授權。
 
+## 📄 License
+
+This project is proprietary and is not distributed under any open-source license.
+
+All rights are strictly reserved by the author.  
+No part of this project may be used, reproduced, modified, or distributed — whether for personal, educational, or commercial purposes — without explicit written authorization from the author.
+
 ---
 
 <p align="center">
