@@ -1479,6 +1479,9 @@ graph TD
 
             // Render mermaid diagrams
             renderMermaid(previewContent);
+
+            // Wrap tables in scrollable containers
+            wrapTablesWithScrollContainer(previewContent);
         } catch (err) {
             console.error('Render error:', err);
         }
@@ -1497,10 +1500,35 @@ graph TD
 
             // Render mermaid diagrams
             renderMermaid(markdownContent);
+
+            // Wrap tables in scrollable containers
+            wrapTablesWithScrollContainer(markdownContent);
         } catch (err) {
             console.error('Render error:', err);
             showToast('渲染 Markdown 時發生錯誤', 'error');
         }
+    }
+
+    // Auto-wrap all <table> elements with a scrollable container div
+    function wrapTablesWithScrollContainer(container) {
+        const tables = container.querySelectorAll('table');
+        tables.forEach((table) => {
+            // Skip if already wrapped
+            if (table.parentElement && table.parentElement.classList.contains('table-scroll-wrapper')) {
+                return;
+            }
+            const wrapper = document.createElement('div');
+            wrapper.className = 'table-scroll-wrapper';
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
+
+            // Detect overflow and add class for scroll shadow hints
+            requestAnimationFrame(() => {
+                if (wrapper.scrollWidth > wrapper.clientWidth) {
+                    wrapper.classList.add('has-overflow');
+                }
+            });
+        });
     }
 
     function renderMarkdownWithMath(content) {
@@ -1843,19 +1871,35 @@ graph TD
         blockquote p:last-child { margin-bottom: 0; }
         ul, ol { margin-bottom: 1em; padding-left: 2em; }
         li { margin-bottom: 0.25em; }
-        table { 
-            border-collapse: collapse; 
-            width: 100%; 
+        .table-scroll-wrapper {
+            width: 100%;
             margin: 1em 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             border: 1px solid ${colors.border};
             border-radius: 8px;
-            overflow: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: ${colors.border} ${colors.bgSecondary};
         }
-        th, td { 
-            border-bottom: 1px solid ${colors.border}; 
-            padding: 0.75em 1em; 
-            text-align: left; 
+        .table-scroll-wrapper::-webkit-scrollbar { height: 8px; }
+        .table-scroll-wrapper::-webkit-scrollbar-track { background: ${colors.bgSecondary}; border-radius: 4px; }
+        .table-scroll-wrapper::-webkit-scrollbar-thumb { background: ${colors.border}; border-radius: 4px; }
+        .table-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: ${colors.textSecondary}; }
+        table {
+            border-collapse: collapse;
+            width: max-content;
+            min-width: 100%;
+            margin: 0;
+            border: none;
         }
+        th, td {
+            border-bottom: 1px solid ${colors.border};
+            padding: 0.75em 1em;
+            text-align: left;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        td:last-child { white-space: normal; min-width: 120px; max-width: 360px; }
         th { background: ${colors.bgTertiary}; font-weight: 600; }
         tr:last-child td { border-bottom: none; }
         img { max-width: 100%; height: auto; border-radius: 8px; margin: 1em 0; }
@@ -1874,6 +1918,15 @@ graph TD
 </head>
 <body>
 ${htmlContent}
+<script>
+document.querySelectorAll('table').forEach(function(table) {
+    if (table.parentElement && table.parentElement.classList.contains('table-scroll-wrapper')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'table-scroll-wrapper';
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+});
+</script>
 </body>
 </html>`;
 
@@ -1938,6 +1991,15 @@ ${htmlContent}
         // Create a temporary container for PDF generation
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = renderMarkdownWithMath(editorTextarea.value);
+        // For PDF, unwrap scroll wrappers and allow normal table flow
+        wrapTablesWithScrollContainer(tempDiv);
+        tempDiv.querySelectorAll('.table-scroll-wrapper').forEach(w => {
+            w.style.overflow = 'visible';
+            w.style.border = 'none';
+        });
+        tempDiv.querySelectorAll('table th, table td').forEach(cell => {
+            cell.style.whiteSpace = 'normal';
+        });
         tempDiv.style.cssText = `
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
             line-height: 1.6;

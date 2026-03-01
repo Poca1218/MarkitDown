@@ -125,12 +125,23 @@
         border: 1px solid #ddd !important;
     }
 
+    /* Table scroll wrapper - disable for print */
+    .table-scroll-wrapper {
+        overflow: visible !important;
+        border: none !important;
+    }
+
     /* Tables */
     .markdown-content table {
         border-collapse: collapse !important;
         width: 100% !important;
         page-break-inside: avoid;
         break-inside: avoid;
+    }
+
+    .markdown-content th,
+    .markdown-content td {
+        white-space: normal !important;
     }
 
     .markdown-content th,
